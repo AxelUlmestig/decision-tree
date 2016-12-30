@@ -1,4 +1,4 @@
-const main = require('../main.js');
+const train = require('../train.js');
 const parseTree = require('../parsetree.js').parseTree;
 
 const data = [
@@ -34,7 +34,7 @@ const data = [
     }
 ]
 
-const model = main.train(data, x => x.class);
+const model = train(data, x => x.class);
 console.log(model);
 console.log('training done');
 console.log(parseTree(model)({
