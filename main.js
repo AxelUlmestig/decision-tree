@@ -2,7 +2,7 @@ const entropy = require('./entropy.js');
 const prepareData = require('./preparedata.js');
 const util = require('./util.js');
 
-const ENTROPY_LIMIT = 0.5;
+const ENTROPY_LIMIT = 0.2;
 
 const train = (data, extract) => {
     const filters = prepareData.getFilters(data, extract);
@@ -42,7 +42,8 @@ const makeLeafNode = (data, extract) => {
 
     return {
         output: bestOutput,
-        confidence: possibleOutputs[bestOutput] / data.length
+        confidence: possibleOutputs[bestOutput] / data.length,
+        sampleSize: data.length
     }
 }
 
