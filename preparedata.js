@@ -105,7 +105,27 @@ const generateFiltersInt = (param, values) => {
     return filters.map(parseFilter);
 }
     
-const generateFiltersFloat = (param, values) => {throw 'not implemented'}
+const generateFiltersFloat = (param, values) => {
+    const max = values.reduce((a, b) => Math.max(a, b));
+    const min = values.reduce((a, b) => Math.min(a, b));
+    const stepSize = (max - min) / 10;
+    const filters = [];
+    for(value = min + stepSize; value < max - stepSize; value += stepSize) {
+        filters.push(
+            (function(x) {return x[param] < value})
+            .toString()
+            .replace('value', value)
+            .replace('[param]', '.' + param)
+        );
+        filters.push(
+            (function(x) {return x[param] > value})
+            .toString()
+            .replace('value', value)
+            .replace('[param]', '.' + param)
+        );
+    }
+    return filters.map(parseFilter);
+}
 
 const generateFiltersString = (param, values) => 
     values.map(value => 
