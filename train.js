@@ -47,6 +47,4 @@ const makeLeafNode = (data, extract) => {
     }
 }
 
-module.exports = {
-    train: train
-}
+module.exports = train
