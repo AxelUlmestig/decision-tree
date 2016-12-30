@@ -108,7 +108,7 @@ const generateFiltersInt = (param, values) => {
 const generateFiltersFloat = (param, values) => {
     const max = values.reduce((a, b) => Math.max(a, b));
     const min = values.reduce((a, b) => Math.min(a, b));
-    const stepSize = (max - min) / 10;
+    const stepSize = (max - min) / 2;
     const filters = [];
     for(value = min + stepSize; value < max - stepSize; value += stepSize) {
         filters.push(
