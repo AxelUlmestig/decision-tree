@@ -7,7 +7,7 @@ const entropy = (data, extract) => {
     return -1 * extracted.filter(util.isUnique) 
     .map(a => {
         const p = pmf(extracted, b => b == a)
-        return pTimesLogP = p * Math.log2(p);
+        return p * Math.log2(p);
     })
     .reduce((a, b) => a + b, 0);
 }
@@ -23,7 +23,7 @@ const getOptimalFilter = (data, extract, filters) =>
         filter: filter, 
         infoGain: informationGain(data, extract, filter)
     }))
-    .reduce((pre, cur) => util.max(pre, cur, x => x.infoGain), {filter: x => true, infoGain: 0})
+    .reduce((pre, cur) => util.max(pre, cur, x => x.infoGain), {filter: () => true, infoGain: 0})
     .filter;
 
 module.exports = {
