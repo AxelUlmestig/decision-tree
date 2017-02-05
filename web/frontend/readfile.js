@@ -17,11 +17,11 @@ document.getElementById('import').onclick = function() {
 };
 
 sendDataset = (filename, dataset) => {
-    var http = new XMLHttpRequest();
-    var url = "/api/dataset";
-    http.open("POST", url, true);
+    const http = new XMLHttpRequest();
+    const setname = filename.match(/(.*).json$/)[1];
+    const url = "/api/dataset/" + setname;
+    http.open("PUT", url, true);
     
-    //http.setRequestHeader("Content-type", "text/plain");
     http.setRequestHeader("Content-type", "application/json");
     
     http.onreadystatechange = function() {//Call a function when the state changes.
@@ -29,6 +29,5 @@ sendDataset = (filename, dataset) => {
             alert(http.responseText);
         }
     }
-    //http.send(dataset);
     http.send(JSON.stringify({'filename': filename, 'dataset': dataset}));
 }

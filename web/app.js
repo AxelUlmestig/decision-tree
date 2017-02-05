@@ -17,21 +17,26 @@ app.get('/', (req, res) => {
     res.render('frontend/index.html');
 });
 
-app.post('/api/dataset', (req, res) => {
-    const filename = req.body.filename;
+app.put('/api/dataset/*', (req, res) => {
+    const regex = /\/api\/dataset\/(.*)$/
+    const datasetname = req.url.match(regex)[1];
+    const filename = datasetname + '.json';
     const data = req.body.dataset;
-    fs.writeFile('../datasets/' + filename, JSON.stringify(data), err => {
+    fs.writeFile('datasets/' + filename, JSON.stringify(data), err => {
         res.status(201);
         res.send();
     });
-});
+})
 
-app.post('/api/train', (req, res) => {
-    const dataset = req.body.dataset;
+app.post('/api/dataset/*/train', (req, res) => {
+    const regex = /\/api\/dataset\/(.*)\/train$/
+    const datasetname = req.url.match(regex)[1];
     const targetvar = req.body.targetvar;
     //TODO make path relative to app.js, not readdata file
     const datasetsdir = '../../datasets/';
-    trainmodel(datasetsdir + dataset, '../models', targetvar)
+    const path = datasetsdir + datasetname + '.json';
+
+    trainmodel(path, 'models', targetvar)
     .then(modelname => {
         res.status(201);
         res.send(modelname);
@@ -42,10 +47,11 @@ app.post('/api/train', (req, res) => {
     });
 })
 
-app.post('/api/evaluate', (req, res) => {
-    const modelname = req.body.model;
+app.post('/api/model/*/evaluate', (req, res) => {
+    const regex = /\/api\/model\/(.*)\/evaluate$/
+    const model = req.url.match(regex)[1];
     const params = req.body.params;
-    const result = evaluate(modelname, params);
+    const result = evaluate(model, params);
 
     res.send(result);
 });
