@@ -2,14 +2,15 @@
   "name": "decision-tree",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "web/app.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "start": "node web/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Axel Ulmestig",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.16.0",
