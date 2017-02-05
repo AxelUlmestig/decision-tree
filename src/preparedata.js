@@ -23,7 +23,7 @@ const getParameters = (data, extract) => {
     return util.mapObj(rawParameters, param => param.filter(util.isUnique))
 }
 
-getMetaData = (data, extract) =>
+const getMetaData = (data, extract) =>
     util.mapObj(getParameters(data, extract), getDataType)
 
 const getDataType = data =>
@@ -33,9 +33,8 @@ const getDataType = data =>
     .reduce((mem, type) => util.max(mem, type, x => priority[x]), INT)
 
 const getDataEntryType = data => {
-    isInt = n => Number(n) === n && n % 1 === 0
-    isFloat = n => Number(n) === n && n % 1 !== 0
-    isString = n => (typeof n) === 'string'
+    const isInt = n => Number(n) === n && n % 1 === 0
+    const isFloat = n => Number(n) === n && n % 1 !== 0
 
     if(isInt(data)) {
         return INT;
@@ -86,7 +85,7 @@ const generateFiltersInt = (param, values) => {
     const max = values.reduce((a, b) => Math.max(a, b));
     const min = values.reduce((a, b) => Math.min(a, b));
     const filters = [];
-    for(value = min + 1; value <= max; value++) {
+    for(let value = min + 1; value <= max; value++) {
         filters.push(
             (function(x) {return x[param] < value})
             .toString()
@@ -94,7 +93,7 @@ const generateFiltersInt = (param, values) => {
             .replace('[param]', '.' + param)
         );
     }
-    for(value = min; value < max; value++) {
+    for(let value = min; value < max; value++) {
         filters.push(
             (function(x) {return x[param] > value}) 
             .toString()
@@ -110,7 +109,7 @@ const generateFiltersFloat = (param, values) => {
     const min = values.reduce((a, b) => Math.min(a, b));
     const stepSize = (max - min) / 2;
     const filters = [];
-    for(value = min + stepSize; value < max - stepSize; value += stepSize) {
+    for(let value = min + stepSize; value < max - stepSize; value += stepSize) {
         filters.push(
             (function(x) {return x[param] < value})
             .toString()
