@@ -1,9 +1,10 @@
 const csv = require('csvtojson')
+const fs = require('fs');
 
 const readFile = (path, cb) => {
     const fileExtension = path.match(/\.([a-z]+)$/)[1];
     if(fileExtension == 'json') {
-        cb(require(path));
+        fs.readFile(path, 'utf8', cb);
     } else if(fileExtension == 'csv') {
         const output = [];
         csv()

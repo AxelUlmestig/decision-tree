@@ -32,8 +32,7 @@ app.post('/api/dataset/*/train', (req, res) => {
     const regex = /\/api\/dataset\/(.*)\/train$/
     const datasetname = req.url.match(regex)[1];
     const targetvar = req.body.targetvar;
-    //TODO make path relative to app.js, not readdata file
-    const datasetsdir = '../../datasets/';
+    const datasetsdir = 'datasets/';
     const path = datasetsdir + datasetname + '.json';
 
     trainmodel(path, 'models', targetvar)
