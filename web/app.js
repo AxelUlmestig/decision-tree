@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+
 const trainmodel = require('./server/trainmodel.js');
+const evaluate = require('./server/evaluate.js');
 
 const app = express();
 app.use(express.static(__dirname + '/'));
@@ -34,6 +36,14 @@ app.post('/api/train', (req, res) => {
     res.status(201);
     res.send();
 })
+
+app.post('/api/evaluate', (req, res) => {
+    const modelname = req.body.model;
+    const params = req.body.params;
+    const result = evaluate(modelname, params);
+
+    res.send(result);
+});
 
 app.listen(8080, () => {
     console.log('server starting');
