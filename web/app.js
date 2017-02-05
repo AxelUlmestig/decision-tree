@@ -5,6 +5,9 @@ const fs = require('fs');
 const trainmodel = require('./server/trainmodel.js');
 const evaluate = require('./server/evaluate.js');
 
+const DATASETS_PATH = 'datasets/';
+const MODELS_PATH = 'models/';
+
 const app = express();
 app.use(express.static(__dirname + '/'));
 app.set('views', __dirname + '/');
@@ -22,7 +25,7 @@ app.put('/api/dataset/*', (req, res) => {
     const datasetname = req.url.match(regex)[1];
     const filename = datasetname + '.json';
     const data = req.body.dataset;
-    fs.writeFile('datasets/' + filename, JSON.stringify(data), err => {
+    fs.writeFile(DATASETS_PATH + filename, JSON.stringify(data), err => {
         res.status(201);
         res.send();
     });
@@ -32,10 +35,9 @@ app.post('/api/dataset/*/train', (req, res) => {
     const regex = /\/api\/dataset\/(.*)\/train$/
     const datasetname = req.url.match(regex)[1];
     const targetvar = req.body.targetvar;
-    const datasetsdir = 'datasets/';
-    const path = datasetsdir + datasetname + '.json';
+    const path = DATASETS_PATH + datasetname + '.json';
 
-    trainmodel(path, 'models', targetvar)
+    trainmodel(path, MODELS_PATH, targetvar)
     .then(modelname => {
         res.status(201);
         res.send(modelname);
