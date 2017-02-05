@@ -30,7 +30,8 @@ app.post('/api/train', (req, res) => {
     const dataset = req.body.dataset;
     const targetvar = req.body.targetvar;
     //TODO make path relative to app.js, not readdata file
-    trainmodel('../../datasets/' + dataset, '../models', targetvar)
+    const datasetsdir = '../../datasets/';
+    trainmodel(datasetsdir + dataset, '../models', targetvar)
     .then(modelname => {
         res.status(201);
         res.send(modelname);
@@ -39,7 +40,6 @@ app.post('/api/train', (req, res) => {
         res.status(400);
         res.send(err);
     });
-    //trainmodel('../datasets/' + dataset, '../models', targetvar);
 })
 
 app.post('/api/evaluate', (req, res) => {
