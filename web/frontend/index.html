@@ -1,9 +1,16 @@
 <html>
-    <body>
-        <input type="file" id="selectFiles" value="Import"/><br>
-        <button id="import">Import</button>
-    <body>
     <head>
-        <script src="./frontend/readfile.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+        <script src="./frontend/controllers/init.js"></script>
+        <script src="./frontend/controllers/dataset_controller.js"></script>
     </head>
+    <body>
+        <div ng-app="decision_tree">
+            <div ng-controller="dataset_controller">
+                <input type="file" id="dataset_file"/><br>
+                <button ng-click="upload()">Upload Dataset</button>
+            </div>
+        </div>
+    <body>
 </html>
