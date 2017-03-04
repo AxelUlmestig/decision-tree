@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+const getmetadata = require('./server/getmetadata.js');
 const trainmodel = require('./server/trainmodel.js');
 const evaluate = require('./server/evaluate.js');
 
@@ -30,6 +31,21 @@ app.put('/api/dataset/*', (req, res) => {
         res.send();
     });
 })
+
+app.get('/api/dataset*', (req, res) => {
+    const regex = /\/api\/dataset\/(.*)$/
+    const match = req.url.match(regex);
+    const datasetname = match ? match[1] : undefined;
+
+    try {
+        const metadata = getmetadata(DATASETS_PATH, datasetname);
+        res.send(metadata);
+    } catch(e) {
+        console.error(e);
+        res.status(404);
+        res.send({ 'error' : datasetname + ' not found' });
+    }
+});
 
 app.post('/api/dataset/*/train', (req, res) => {
     const regex = /\/api\/dataset\/(.*)\/train$/
