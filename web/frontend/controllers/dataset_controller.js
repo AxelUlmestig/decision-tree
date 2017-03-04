@@ -1,4 +1,7 @@
 app.controller('dataset_controller', ($scope, $http, state) => {
+
+    $scope.state = state;
+
     const putDataset = (dataset, name) =>
         $http({
             method: 'PUT',
@@ -18,7 +21,7 @@ app.controller('dataset_controller', ($scope, $http, state) => {
             url: '/api/dataset/',
         });
 
-    //const updateDatasets = datasets => state.datasets = datasets;
+    const updateDatasets = datasets => $scope.state.datasets = datasets.data;
 
     $scope.upload = () => {
         const files = document.getElementById('dataset_file').files;
@@ -33,8 +36,7 @@ app.controller('dataset_controller', ($scope, $http, state) => {
 
             putDataset(dataset, setname, console.log)
             .then(getDatasets, console.error)
-            .then(console.log, console.log);
-            //.then(updateDatasets, console.error);
+            .then(updateDatasets, console.error);
         };
         fr.readAsText(files[0]);
     };

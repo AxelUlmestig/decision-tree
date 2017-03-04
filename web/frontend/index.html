@@ -4,12 +4,20 @@
 
         <script src="./frontend/controllers/init.js"></script>
         <script src="./frontend/controllers/dataset_controller.js"></script>
+        <script src="./frontend/controllers/train_controller.js"></script>
     </head>
     <body>
         <div ng-app="decision_tree">
             <div ng-controller="dataset_controller">
+                <p><b>Upload dataset</b></p>
                 <input type="file" id="dataset_file"/><br>
                 <button ng-click="upload()">Upload Dataset</button>
+            </div>
+            <div ng-controller="train_controller">
+                <p><b>Train model</b></p>
+                Dataset: <select ng-model="dataset" ng-options="dataset.dataset for dataset in datasets"></select><br>
+                Parameter: <select ng-model="parameter" ng-options="parameter for parameter in dataset.parameters"></select><br>
+                <button ng-click="train()">Train module</button>
             </div>
         </div>
     <body>
