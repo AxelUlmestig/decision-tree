@@ -4,18 +4,18 @@ const util = require('./util.js');
 
 const ENTROPY_LIMIT = 0.2;
 
-const train = (data, extract) => {
-    const filters = prepareData.getFilters(data, extract);
-    const filter = entropy.getOptimalFilter(data, extract, filters);
-    const informationGain = entropy.informationGain(data, extract, filter);
+const train = (data, targetVar) => {
+    const filters = prepareData.getFilters(data, targetVar);
+    const filter = entropy.getOptimalFilter(data, targetVar, filters);
+    const informationGain = entropy.informationGain(data, targetVar, filter);
 
     if(informationGain > ENTROPY_LIMIT) {
         const negFilter = util.negate(filter);
-        const childNodePos = train(data.filter(filter), extract);
-        const childNodeNeg = train(data.filter(negFilter), extract);
+        const childNodePos = train(data.filter(filter), targetVar);
+        const childNodeNeg = train(data.filter(negFilter), targetVar);
         return makeInternalNode(filter, childNodePos, childNodeNeg);
     } else {
-        return makeLeafNode(data, extract);
+        return makeLeafNode(data, targetVar);
     }
 }
 
@@ -29,8 +29,9 @@ const makeInternalNode = (filter, posChild, negChild) =>
         negChild: negChild
     })
 
-const makeLeafNode = (data, extract) => {
-    const possibleOutputs = data.map(extract)
+const makeLeafNode = (data, targetVar) => {
+    const possibleOutputs = data
+    .map(dataPoint => dataPoint[targetVar])
     .reduce((mem, cur) => {
         mem[cur] = (mem[cur] || 0) + 1;
         return mem;

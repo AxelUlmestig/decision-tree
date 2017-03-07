@@ -10,21 +10,28 @@ const priority = {
     STRING: 3
 }
 
-const getParameters = (data, extract) => {
-    const rawParameters = data.reduce((mem, row) =>
-        util.reduceObj(row, (memLocal, value, key) => {
-            if(extract(row) != row[key]) {
-                memLocal[key] = memLocal[key] || [];
-                memLocal[key].push(value);
-            }
-            return memLocal;
-        }, mem)
-    , {});
-    return util.mapObj(rawParameters, param => param.filter(util.isUnique))
-}
+const getParameters = (data, targetVar) => {
+    const orderedData = data
+    .map(row =>
+        Object.keys(row)
+        .map(param => ({
+            key : param,
+            value : row[param]
+        }))
+    )
+    .reduce((allRows, row) => allRows.concat(row), [])
+    .filter(dataPoint => dataPoint.key != targetVar)
+    .reduce((allData, dataPoint) => {
+        allData[dataPoint.key] = allData[dataPoint.key] || [];
+        allData[dataPoint.key].push(dataPoint.value);
+        return allData;
+    }, {});
 
-const getMetaData = (data, extract) =>
-    util.mapObj(getParameters(data, extract), getDataType)
+    return util.mapObj(orderedData, param => param.filter(util.isUnique));
+};
+
+const getMetaData = (data, targetVar) =>
+    util.mapObj(getParameters(data, targetVar), getDataType)
 
 const getDataType = data =>
     data
@@ -46,7 +53,7 @@ const getDataEntryType = data => {
 }
 
 /*
-const getFilters = (data, extract) =>
+const getFilters = (data, targetVar) =>
     data.map(y => 
         parseFilter(
             (function(x) {return x.value == y.value})
@@ -56,9 +63,9 @@ const getFilters = (data, extract) =>
     )
 */
 
-const getFilters = (data, extract, metaData) => {
-    metaData = metaData || getMetaData(data, extract);
-    const parameters = getParameters(data, extract);
+const getFilters = (data, targetVar, metaData) => {
+    metaData = metaData || getMetaData(data, targetVar);
+    const parameters = getParameters(data, targetVar);
     return util.reduceObj(parameters, (filters, values, param) => {
         const type = metaData[param];
         const newFilters = generateFilters(type, param, values);
@@ -95,7 +102,7 @@ const generateFiltersInt = (param, values) => {
     }
     for(let value = min; value < max; value++) {
         filters.push(
-            (function(x) {return x[param] > value}) 
+            (function(x) {return x[param] > value})
             .toString()
             .replace('value', value)
             .replace('[param]', '.' + param)
@@ -103,7 +110,7 @@ const generateFiltersInt = (param, values) => {
     }
     return filters.map(parseFilter);
 }
-    
+
 const generateFiltersFloat = (param, values) => {
     const max = values.reduce((a, b) => Math.max(a, b));
     const min = values.reduce((a, b) => Math.min(a, b));

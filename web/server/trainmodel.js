@@ -10,7 +10,7 @@ const trainmodel = (datapath, modeldir, variable) =>
                 const modelfilename = filename + '_' + variable + '.json';
                 const jsondata = JSON.parse(data);
 
-                const model = train(jsondata, x => x[variable]);
+                const model = train(jsondata, variable);
 
                 fs.writeFile(modeldir + '/' + modelfilename, JSON.stringify(JSON.stringify(model), null, 4));
                 resolve(modelfilename);
